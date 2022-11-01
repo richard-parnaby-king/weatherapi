@@ -21,8 +21,9 @@ There are three API endpoints:
 curl --location --request POST 'http://localhost/api/user/token' \
 --form 'email="richard@parnaby-king.co.uk"' \
 --form 'password="Password1"' \
---form 'name="Richard PK"'
+--form 'name="Weather API"'
 //will return a string for example "1|kvpnG0RnaaesVErrLSqyHXNBICRrUX5gM8RNt2YX"
+//Parameter "name" refers to token name for easy identification in database
 
 //Fetch weather json using generated token
 curl --location --request GET 'http://localhost/api/weather?location=chester' \
