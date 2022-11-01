@@ -1,0 +1,25 @@
+{
+    "name": "richard-parnaby-king/weatherapi",
+    "description": "Laravel based API that has endpoints for getting the weather from a weather api, with parameters to select a location.",
+    "license": "MIT",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "RichardPK\\WeatherApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RichardPK\\WeatherApi\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RichardPK\\WeatherApi\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
