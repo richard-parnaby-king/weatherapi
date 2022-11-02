@@ -54,7 +54,6 @@ class UserController extends Controller
     {
         $request->expectsJson();
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', Rules\Password::defaults()],
         ]);
@@ -65,12 +64,43 @@ class UserController extends Controller
         //If there is no user or the user's password does not match what has been supplied,
         // then throw a validation message.
         if (!$user || ! Hash::check($request->password, $user->password)) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response(['message' => 'Unauthenticated.'], 401)
+                ->header('Content-Type', 'application/json');
         }
-     
-        //Creat a new token. Identify the token with the supplied name.
-        return $user->createToken($request->name)->plainTextToken;
+        
+        
+        //Create a JSON Web Token (JWT).
+        $issuedAt = new \DateTimeImmutable();
+        $expire = $issuedAt->modify('+6 minutes')->getTimestamp();
+        
+        $header = $this->base64UrlEncode(json_encode([
+            'alg' => 'HS256',
+            'typ' => 'JWT',
+        ]));
+        $payload = $this->base64UrlEncode(json_encode([
+            'iat' => $issuedAt->getTimestamp(),
+            'iss' => env('APP_URL'),
+            'nbf' => $issuedAt->getTimestamp(),
+            'exp' => $expire,
+            'email' => $user->email,
+            'user_id' => $user->id,
+        ]));
+        $signature = $this->base64UrlEncode(hash_hmac(
+            'sha256',
+            sprintf('%s.%s', $header, $payload),
+            env('JWT_KEY'),
+            true
+        ));
+        
+        return sprintf('%s.%s.%s', $header,$payload,$signature);
+    }
+    
+    /**
+     * Helper function to remove padding from the string
+     * @param mixed
+     * @return string
+     */
+    private function base64UrlEncode($data) {
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 }

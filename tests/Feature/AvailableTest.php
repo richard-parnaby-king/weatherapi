@@ -8,6 +8,7 @@ use App\Models\User;
 
 class AvailableTest extends TestCase
 {
+    const EMAIL = 'pqdvord0iki0oaiezn2glce5av0zzhns@jo3pgli9et7dgnunobckyj22i5kwctph.com';
 
     /**
      * Does the api endpoint create a user?
@@ -15,10 +16,11 @@ class AvailableTest extends TestCase
      */
     public function test_user_can_create_account()
     {
+        
         $response = $this->json('POST', '/api/user/create', [
-            'email' => 'richard@parnaby-king.co.uk',
+            'email' => self::EMAIL,
             'password' => 'Password1',
-            'name' => 'Richard PK',
+            'name' => 'Test User',
         ]);
     
         $response->assertStatus(200);
@@ -33,9 +35,8 @@ class AvailableTest extends TestCase
     {   
         //Login and create token
         $response = $this->json('POST', '/api/user/token', [
-            'email' => 'richard@parnaby-king.co.uk',
+            'email' => self::EMAIL,
             'password' => 'Password1',
-            'name' => 'Weather API Test',
         ]);
         
         $response->assertStatus(200);
@@ -52,10 +53,10 @@ class AvailableTest extends TestCase
      */
     public function test_weather_api_requires_jwt()
     {
-        $response = $this->getJson('http://localhost/api/weather');
+        $response = $this->json('GET', '/api/weather');
         
         $response->assertStatus(401);
-        $this->assertTrue($response->getData(true) == ['message' => 'Unauthenticated.']);
+        $this->assertTrue(json_decode($response->getContent(), true) == ['message' => 'Unauthenticated.']);
     }
     
     /**
@@ -82,7 +83,7 @@ class AvailableTest extends TestCase
         );
         
         //Delete our test user. It is no longer required.
-        $user = User::where('email', 'richard@parnaby-king.co.uk');
+        $user = User::where('email', self::EMAIL);
         $user->delete();
         
     }
