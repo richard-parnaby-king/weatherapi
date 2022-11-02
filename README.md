@@ -19,16 +19,14 @@ There are three API endpoints:
 ```php
 //Create a User Token (assumes user has already been created).
 curl --location --request POST 'http://localhost/api/user/token' \
---form 'email="richard@parnaby-king.co.uk"' \
+--form 'email="example@domain.co.uk"' \
 --form 'password="Password1"' \
---form 'name="Weather API"'
-//will return a string for example "1|kvpnG0RnaaesVErrLSqyHXNBICRrUX5gM8RNt2YX"
-//Parameter "name" refers to token name for easy identification in database
+//will return a string for example "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NjczODg0OTksImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdCIsIm5iZiI6MTY2NzM4ODQ5OSwiZXhwIjoxNjY3Mzg4ODU5LCJlbWFpbCI6InJpY2hhcmRAcGFybmFieS1raW5nLmNvLnVrIiwidXNlcl9pZCI6NH0.Nzmdn1KYn1iCUjYG_LSgV8AH3dYdzQ8FreI6tZ-Iom4"
 
 //Fetch weather json using generated token
 curl --location --request GET 'http://localhost/api/weather?location=chester' \
 --header 'accept: application/json' \
---header 'Authorization: Bearer 1|kvpnG0RnaaesVErrLSqyHXNBICRrUX5gM8RNt2YX'
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NjczODg0OTksImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdCIsIm5iZiI6MTY2NzM4ODQ5OSwiZXhwIjoxNjY3Mzg4ODU5LCJlbWFpbCI6InJpY2hhcmRAcGFybmFieS1raW5nLmNvLnVrIiwidXNlcl9pZCI6NH0.Nzmdn1KYn1iCUjYG_LSgV8AH3dYdzQ8FreI6tZ-Iom4'
 //will return a json string on weather data
 
 ```
